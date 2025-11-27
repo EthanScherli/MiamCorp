@@ -63,6 +63,7 @@ class Main:
             elif choix == "cr":
                 Main.creerCompteUtilisateur()
                 choixCorrect = True
+                Main.application()
 
             else:
                 print("---ERREUR--- Veuillez entrez une valeur correct")
