@@ -1,5 +1,6 @@
 class Reservation:
-    def __init__(self, dateResa, nbrPersResa:int, prefClient:str):
+    def __init__(self, id_resa, dateResa, nbrPersResa:int, prefClient:str):
+        self.id = id_resa
         self.__date = dateResa
         self.__nbrPers = nbrPersResa
         self.__pref = prefClient
@@ -28,4 +29,4 @@ class Reservation:
     def preferences(self, new_pref):
         self.__pref = new_pref
 
-    def suppr_resa(self):
+    def suppr_resa(self, db_path="nom.db"):
