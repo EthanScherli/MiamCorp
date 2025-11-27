@@ -1,60 +1,71 @@
-from application import Application #import des objet pour pouvoir les utiliser dans cette classe
+from application import Application
 from Utilisateur import Utilisateur
 
 class Main:
-    liste_utilisateurs = []#liste des utilisateurs qui ont créer un compte
-    utilisateurConnecte=None
+    liste_utilisateurs = []
+    utilisateurConnecte = None
 
-    def creerCompteUtilisateur():#fonction permettant de créer un utilisateur 
-        nom=input("veuillez entrez votre nom")
-        prenom=input("veuillez entrez votre prenom")
-        mdp=input("veuillez entrez un mot de passe")
-        idUtilisateur=input("veuillez entrez un identifiant")
-        
+    @staticmethod
+    def creerCompteUtilisateur():
+        nom = input("veuillez entrez votre nom >> ")
+        prenom = input("veuillez entrez votre prenom >> ")
+        mdp = input("veuillez entrez un mot de passe >> ")
+        idUtilisateur = input("veuillez entrez un identifiant >> ")
+
         user = Utilisateur(nom, prenom, mdp, idUtilisateur)
-        liste_utilisateurs.append(user)
-        
+        Main.liste_utilisateurs.append(user)
+        print("Utilisateur créé")
+        for i in Main.liste_utilisateurs:
+            print(i)
+
         return user
 
-    def connecterUtilisateur():#fonction permettant de connecter un utilisateur
-        idOk=False
-        mdpOk=False
-        positionUtilisateur=0
-        while idOk == False:#boucle permettant de voir si l'identifiant est disponible dans la liste des utilisateurs créer
-            positionUtilisateur=0
-            identifiant=input("entrez votre identifiant")
-            for i in liste_utilisateurs:
-                if i.id==identifiant:
+    @staticmethod
+    def connecterUtilisateur():
+        idOk = False
+        mdpOk = False
+        positionUtilisateur = 0
+
+        while idOk == False:
+            positionUtilisateur = 0
+            identifiant = input("entrez votre identifiant >> ")
+            for i in Main.liste_utilisateurs:
+                if i.id == identifiant:
                     print("identifiant trouvé")
-                    idOk=True
+                    idOk = True
                     break
                 else:
-                    positionUtilisateur= positionUtilisateur+1
-                
-            if idOk==False:
+                    positionUtilisateur = positionUtilisateur + 1
+
+            if idOk == False:
                 print("identifiant introuvable")
-        
-        while mdpOk == False:#boucle permettant de voir si le mdp correspond à l'identifiant utilisé
-            mdp=input("entrez votre mot de passe")
-            if mdp==liste_utilisateurs[positionUtilisateur].id:
+
+        while mdpOk == False:
+            mdp = input("entrez votre mot de passe >> ")
+            if mdp == Main.liste_utilisateurs[positionUtilisateur].mdp:
                 print("connexion Réussie")
+                Main.utilisateurConnecte = Main.liste_utilisateurs[positionUtilisateur]
                 return identifiant
             else:
                 print("mot de passe incorrect")
-            
 
+    @staticmethod
+    def application():
+        choixCorrect = False
+        choix = None
 
-    def application():#fonction faisant tourner l'application 
-        choixCorrect=False #variable permetant de savoir si le choix de l'utilisateur est correct
-        choix=None
-        while choixCorrect ==  False:
-            choix=input("Voulez vous vous connecter ou créer un comptre [co/cr]")
-            if choix =="co":
-                app=Application(Main.connecterUtilisateur())
-                choixCorrect == True
-            elif choix =="cr":
-                Main.creerCompteUtilisateur() 
-                choixCorrect ==True
-                Main.application()
+        while choixCorrect == False:
+            choix = input("Voulez vous vous connecter ou créer un comptre [co/cr] >> ")
+            if choix == "co":
+                app = Application(Main.connecterUtilisateur())
+                choixCorrect = True
+
+            elif choix == "cr":
+                Main.creerCompteUtilisateur()
+                choixCorrect = True
+
             else:
                 print("---ERREUR--- Veuillez entrez une valeur correct")
+
+appli = Main()
+appli.application()
