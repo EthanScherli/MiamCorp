@@ -29,4 +29,4 @@ class Reservation:
     def preferences(self, new_pref):
         self.__pref = new_pref
 
-    def suppr_resa(self, db_path="nom.db"):
+    def suppr_resa(self, db_path="GastonGourmmet.db"):
