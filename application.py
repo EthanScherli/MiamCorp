@@ -50,6 +50,18 @@ class Application:
         try:
             connexion = sqlite3.connect(DB_PATH)
             curseur = connexion.cursor()
+            
+            # Vérification si la table est déjà réservée à ce créneau
+            curseur.execute("""
+                SELECT * FROM reservations
+                WHERE id_table = ? AND date = ? AND heure = ?
+            """, (id_table, date, heure))
+            if curseur.fetchone():
+                print("Erreur : cette table est déjà réservée à cette date et cette heure.")
+                connexion.close()
+                return
+            
+            # Si pas de réservation, on ajoute la réservation
             curseur.execute("""
                 INSERT INTO reservations (id_util, id_table, date, heure, nbr_pers, pref)
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -61,6 +73,7 @@ class Application:
             print(f"Réservation ajoutée : {nouvelle_resa}")
         except Exception as e:
             print("Erreur lors de l'ajout de réservation :", e)
+
 
     def voirReservation(self):
         try:
