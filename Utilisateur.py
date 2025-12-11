@@ -7,6 +7,14 @@ class Utilisateur:
         self.mdp = mdp
         self.role = role
 
+    @property
+    def valeurNom(self):
+        return self.nom
+    
+    @valeurNom.setter
+    def valeurNom(self,newNom):
+        self.nom=newNom
+
     def verifier_mdp(self, mdp_a_verifier):
         return self.mdp == mdp_a_verifier
 

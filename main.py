@@ -11,6 +11,7 @@ class Main:
     connexion = sqlite3.connect(DB_PATH)
     curseur = connexion.cursor()
 
+
     @staticmethod
     def chargerUtilisateurs():
         Main.curseur.execute("SELECT id_util, nom, prenom, email, mdp, role FROM utilisateurs")
@@ -26,7 +27,7 @@ class Main:
         prenom = input("veuillez entrez votre prenom >> ")
         email = input("veuillez entrez votre email >> ")
         mdp = input("veuillez entrez un mot de passe >> ")
-        role = input("role de l'utilisateur (admin/client/autre) >> ")
+        role = "client"
 
         Main.curseur.execute(
             "INSERT INTO utilisateurs (nom, prenom, email, mdp, role) VALUES (?, ?, ?, ?, ?)",
