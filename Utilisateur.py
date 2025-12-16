@@ -15,8 +15,8 @@ class Utilisateur:
 
     @email.setter
     def email(self, new_email):
-        # Regex simple pour valider un email
-        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        new_email = new_email.strip()
+        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$'
         if not re.match(regex, new_email):
             raise ValueError(f"Format d'email invalide : {new_email}")
         self._email = new_email
