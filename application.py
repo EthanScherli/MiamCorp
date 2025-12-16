@@ -1,4 +1,4 @@
-from Reservations import Reservation
+from Reservations import Reservation, DateInvalideError
 import sqlite3
 import functools
 import datetime
@@ -6,7 +6,7 @@ import datetime
 DB_PATH = "Gaston_db.sqlite"
 
 def log_action(func):
-    """Décorateur qui loggue l'exécution d'une méthode dans un fichier."""
+    """Décorateur qui log l'exécution d'une méthode dans un fichier."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         try:
@@ -77,32 +77,47 @@ class Application:
     @log_action
     def ajouterReservation(self, id_table, date, heure, nbr_pers, pref):
         try:
+            # 1. On crée l'objet avec None pour l'ID (car on ne l'a pas encore).
+            # C'est ici que la date est vérifiée. Si elle est passée, ça plante et s'arrête là.
+            nouvelle_resa = Reservation(None, self.utilisateur.id_util, id_table, date, heure, nbr_pers, pref)
+
             connexion = sqlite3.connect(DB_PATH)
             curseur = connexion.cursor()
             
-            # Vérification si la table est déjà réservée à ce créneau
+            # 2. Vérification disponibilité
             curseur.execute("""
                 SELECT * FROM reservations
                 WHERE id_table = ? AND date = ? AND heure = ?
             """, (id_table, date, heure))
+            
             if curseur.fetchone():
                 connexion.close()
-                raise Exception("Cette table est déjà réservée à cette date et cette heure.")
-                return
+                # On lève une erreur pour l'afficher dans l'interface
+                raise Exception("Cette table est déjà réservée à ce créneau.")
             
-            # Si pas de réservation, on ajoute la réservation
+            # 3. Insertion dans la base de données
             curseur.execute("""
                 INSERT INTO reservations (id_util, id_table, date, heure, nbr_pers, pref)
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (self.utilisateur.id_util, id_table, date, heure, nbr_pers, pref))
+            
             connexion.commit()
-            id_resa = curseur.lastrowid
-            nouvelle_resa = Reservation(id_resa, self.utilisateur.id_util, id_table, date, heure, nbr_pers, pref)
+            
+            # 4. Maintenant on récupère le vrai ID généré par la base de données
+            id_genere = curseur.lastrowid
+            nouvelle_resa.id_resa = id_genere
+            
             connexion.close()
-            print(f"Réservation ajoutée : {nouvelle_resa}")
-        except Exception as e:
-            print("Erreur lors de l'ajout de réservation :", e)
+            print(f"Réservation ajoutée avec succès : ID {id_genere}")
 
+        # Gestion des erreurs
+        except DateInvalideError as e:
+            # On relance l'erreur pour que l'interface puisse afficher la pop-up
+            raise e 
+        except Exception as e:
+            # Pareil
+            raise e
+        
     def voirReservation(self):
         try:
             connexion = sqlite3.connect(DB_PATH)
