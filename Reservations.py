@@ -3,6 +3,10 @@ from datetime import datetime
 
 DB_PATH = "Gaston_db.sqlite"
 
+class DateInvalideError(Exception):
+    """Exception levée si la date de réservation est passée ou invalide."""
+    pass
+    
 class Reservation:
     def __init__(self, id_resa, id_util, id_table, date, heure, nbr_pers, pref):
         self.id_resa = id_resa
@@ -12,7 +16,23 @@ class Reservation:
         self.heure = heure
         self.nbr_pers = nbr_pers
         self.pref = pref
+        
+    @property
+    def date(self):
+        return self._date
 
+    @date.setter
+    def date(self, date_str):
+        try:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            raise DateInvalideError("Format de date invalide (attendu: YYYY-MM-DD)")
+
+        if date_obj < datetime.now().date():
+            raise DateInvalideError(f"Impossible de réserver dans le passé ({date_str})")
+        
+        self._date = date_str
+    
     def suppr_resa(self):
         try:
             connexion = sqlite3.connect(DB_PATH)
