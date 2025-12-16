@@ -33,4 +33,7 @@ class Utilisateur:
         return self.mdp == mdp_a_verifier
 
     def __str__(self):
-        return f"{self.nom} {self.prenom} ({self.email}) - role: {self.role}"
+        try:
+            return f"{self.nom} {self.prenom} ({self.email}) - role: {self.role}"
+        except Exception as e:
+            return f"Utilisateur invalide ({e})"
