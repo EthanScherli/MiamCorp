@@ -1,7 +1,28 @@
 from Reservations import Reservation
 import sqlite3
+import functools
+import datetime
 
 DB_PATH = "Gaston_db.sqlite"
+
+def log_action(func):
+    """Décorateur qui loggue l'exécution d'une méthode dans un fichier."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            # Si ok, on log le succès
+            with open("logs_activite.txt", "a", encoding="utf-8") as f:
+                timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                f.write(f"[LOG] {timestamp} - Action: {func.__name__} - Status: Succès\n")
+            return result
+        except Exception as e:
+            # Si erreur, on log l'exception
+            with open("logs_activite.txt", "a", encoding="utf-8") as f:
+                timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                f.write(f"[LOG] {timestamp} - Action: {func.__name__} - Erreur: {e}\n")
+            raise e # On relance l'erreur
+    return wrapper
 
 class Application:
 
@@ -46,6 +67,14 @@ class Application:
         pref = input("Préférences du client >> ")
         self.ajouterReservation(id_table, date, heure, nbr_pers, pref)
 
+        try:
+            self.ajouterReservation(id_table, date, heure, nbr_pers, pref)
+        except DateInvalideError as e:
+            print(f"--- ERREUR DATE : {e} ---")
+        except Exception as e:
+            print(f"--- ERREUR : {e} ---")
+
+    @log_action
     def ajouterReservation(self, id_table, date, heure, nbr_pers, pref):
         try:
             connexion = sqlite3.connect(DB_PATH)
@@ -57,8 +86,8 @@ class Application:
                 WHERE id_table = ? AND date = ? AND heure = ?
             """, (id_table, date, heure))
             if curseur.fetchone():
-                print("Erreur : cette table est déjà réservée à cette date et cette heure.")
                 connexion.close()
+                raise Exception("Cette table est déjà réservée à cette date et cette heure.")
                 return
             
             # Si pas de réservation, on ajoute la réservation
@@ -73,7 +102,6 @@ class Application:
             print(f"Réservation ajoutée : {nouvelle_resa}")
         except Exception as e:
             print("Erreur lors de l'ajout de réservation :", e)
-
 
     def voirReservation(self):
         try:
@@ -91,6 +119,7 @@ class Application:
         except Exception as e:
             print("Erreur lors de la lecture des réservations :", e)
 
+    @log_action
     def supprimerReservation(self):
         id_resa = input("Entrez l'ID de la réservation à supprimer >> ")
         try:
@@ -124,6 +153,20 @@ class Application:
             connexion.close()
         except Exception as e:
             print("Erreur lors de la lecture des tables :", e)
+
+    def get_tables_pour_capacite(self, nbr_personnes_min):
+        """Retourne les tables ayant une capacité suffisante (utilisation de filter/lambda)."""
+        try:
+            connexion = sqlite3.connect(DB_PATH)
+            curseur = connexion.cursor()
+            curseur.execute("SELECT * FROM tabless")
+            toutes_les_tables = curseur.fetchall()
+            connexion.close()
+            tables_ok = list(filter(lambda x: x[1] >= int(nbr_personnes_min), toutes_les_tables))
+            return tables_ok
+        except Exception as e:
+            print(f"Erreur lors du filtrage des tables : {e}")
+            return []
 
     @staticmethod
     def deconnecterUtilisateur():
