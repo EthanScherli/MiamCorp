@@ -4,7 +4,6 @@ from datetime import datetime
 DB_PATH = "Gaston_db.sqlite"
 
 class DateInvalideError(Exception):
-    """Exception levée si la date de réservation est passée ou invalide."""
     pass
     
 class Reservation:
