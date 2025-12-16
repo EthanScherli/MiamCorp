@@ -1,3 +1,5 @@
+import re
+
 class Utilisateur:
     def __init__(self, nom, prenom, email, mdp, role, id_util=None):
         self.id_util = id_util  # optionnel, récupéré depuis la DB
@@ -6,6 +8,18 @@ class Utilisateur:
         self.email = email
         self.mdp = mdp
         self.role = role
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, new_email):
+        # Regex simple pour valider un email
+        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not re.match(regex, new_email):
+            raise ValueError(f"Format d'email invalide : {new_email}")
+        self._email = new_email
 
     @property
     def valeurNom(self):
