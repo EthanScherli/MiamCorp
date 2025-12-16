@@ -3,6 +3,7 @@ from tkinter import messagebox, ttk, simpledialog
 from main import Main
 from application import Application
 import sqlite3
+from Utilisateur import Utilisateur
 
 COULEUR_FOND = "#f4e9d8"       # Beige chaleureux
 COULEUR_ACCENT = "#c97b5b"     # Terracotta
@@ -94,16 +95,30 @@ class FenetreCreationCompte(tk.Frame):
         if nom == "" or prenom == "" or email == "":
             messagebox.showerror("Erreur", "Veuillez remplir tous les champs")
             return
-
         try:
+            # 1. On crée un objet "temporaire" juste pour tester si l'email est valide
+            # Si l'email est mauvais, ça plante ICI et ça va direct au 'except ValueError'
+            test_validite = Utilisateur(nom, prenom, email, mdp, role)
+
+            # 2. Si on arrive ici, c'est que l'email est bon. On peut insérer en BDD.
             Main.curseur.execute(
                 "INSERT INTO utilisateurs (nom, prenom, email, mdp, role) VALUES (?, ?, ?, ?, ?)",
                 (nom, prenom, email, mdp, role)
             )
             Main.connexion.commit()
+            
+            # 3. On recharge la liste
             Main.chargerUtilisateurs()
+            
             messagebox.showinfo("Succès", "Compte créé ! Vous pouvez vous connecter.")
             self.retour()
+
+        except ValueError as e:
+            messagebox.showerror("Format Invalide", str(e))
+
+        except sqlite3.IntegrityError:
+            messagebox.showerror("Erreur", "Cette adresse email est déjà utilisée.")
+            
         except Exception as e:
             messagebox.showerror("Erreur DB", f"Impossible de créer le compte : {e}")
 
