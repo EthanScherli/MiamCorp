@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from interface import FenetreConnexion, FenetreCreationCompte
 
 # Utilisation de mock pour imiter un utilisateur sans devoir ouvrir Tkinter
-class FakeUser:
+class UtilisateurTest:
     def __init__(self, email, mdp):
         self.email = email
         self._mdp = mdp
@@ -22,7 +22,7 @@ def test_connexion_reussie():
     fenetre.email.get = MagicMock(return_value="test@mail.com")
     fenetre.mdp.get = MagicMock(return_value="1234")
 
-    fake_user = FakeUser("test@mail.com", "1234")
+    fake_user = UtilisateurTest("test@mail.com", "1234")
 
     # Mock de Main utilisé DANS interface.py
     with patch("interface.Main") as MockMain:
