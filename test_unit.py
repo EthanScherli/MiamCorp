@@ -57,17 +57,6 @@ def test_creation_compte_champs_vides():
         mock_error.assert_called_once_with(
             "Erreur", "Veuillez remplir tous les champs"
         )
-def test_email_valide_et_invalide():
-    u = Utilisateur("Alice", "Dupont", "alice@mail.com", "1234", "admin")
-    assert u.email == "alice@mail.com"
-
-    with pytest.raises(ValueError):
-        u.email = "mauvais_email"
-
-def test_verifier_mdp():
-    u = Utilisateur("Bob", "Martin", "bob@mail.com", "abcd", "client")
-    assert u.verifier_mdp("abcd") is True
-    assert u.verifier_mdp("wrong") is False
 
 def test_email_valide_et_invalide():
     u = Utilisateur("Alice", "Dupont", "alice@mail.com", "1234", "admin")
