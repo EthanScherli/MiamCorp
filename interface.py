@@ -4,6 +4,7 @@ from main import Main
 from application import Application
 import sqlite3
 from Utilisateur import Utilisateur
+from Menu import get_menu_du_jour
 
 COULEUR_FOND = "#f4e9d8"       # Beige chaleureux
 COULEUR_ACCENT = "#c97b5b"     # Terracotta
@@ -137,6 +138,7 @@ class FenetreMenu(tk.Frame):
                  bg=COULEUR_FOND, fg=COULEUR_ACCENT).pack(pady=20)
 
         for texte, action in [
+            ("Voir la Carte 🍽️", self.app_gui.voir_la_carte),
             ("Voir mes réservations", self.app_gui.afficher_reservations),
             ("Ajouter une réservation", self.app_gui.afficher_ajout_resa),
             ("Supprimer une réservation", self.app_gui.afficher_suppr_resa),
@@ -158,6 +160,50 @@ class InterfaceGraphique:
         self.frame = None
 
         self.afficher_connexion()
+
+    # -----------------------
+    # NOUVELLE MÉTHODE : Voir la Carte
+    # -----------------------
+    def voir_la_carte(self):
+        # Création de la fenêtre Pop-up
+        fenetre_menu = tk.Toplevel(self.root)
+        fenetre_menu.title("Le Menu de Gaston")
+        fenetre_menu.geometry("450x600")
+        fenetre_menu.configure(bg="#2c3e50") # Fond sombre externe
+
+        # --- Cadre style "Feuille de papier" ---
+        feuille = tk.Frame(fenetre_menu, bg="#fffaf0", bd=10, relief="ridge")
+        feuille.pack(expand=True, fill="both", padx=20, pady=20)
+
+        # Titre sur la feuille
+        lbl_titre = tk.Label(feuille, text="Menu du Jour", 
+                             font=("Times New Roman", 26, "bold"), 
+                             bg="#fffaf0", fg="#8b4513")
+        lbl_titre.pack(pady=(15, 20))
+
+        # Récupération des données depuis Menu.py (Utilisation)
+        liste_plats = get_menu_du_jour()
+
+        # Affichage des plats
+        for plat in liste_plats:
+            ligne = tk.Frame(feuille, bg="#fffaf0")
+            ligne.pack(fill='x', pady=6, padx=15)
+            
+            # Nom du plat (gauche)
+            tk.Label(ligne, text=f"• {plat.nom}", font=("Garamond", 13, "bold"), 
+                     bg="#fffaf0", fg="#333").pack(side="left")
+            
+            # Prix (droite)
+            tk.Label(ligne, text=f"{plat.prix:.2f} €", font=("Garamond", 13, "bold"), 
+                     bg="#fffaf0", fg="#c0392b").pack(side="right")
+            
+            # Catégorie (petit en dessous)
+            tk.Label(feuille, text=f"   ({plat.categorie})", font=("Arial", 9, "italic"), 
+                     bg="#fffaf0", fg="#7f8c8d", anchor="w").pack(fill='x', padx=35, pady=(0, 2))
+
+        # Bouton fermer en bas
+        tk.Button(feuille, text="Fermer", command=fenetre_menu.destroy, 
+                  bg="#dcdcdc", font=("Arial", 10)).pack(side="bottom", pady=20)
 
     # -----------------------
     # Plan interactif (version A, fidèle au croquis)

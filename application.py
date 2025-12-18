@@ -2,8 +2,12 @@ from Reservations import Reservation, DateInvalideError
 import sqlite3
 import functools
 import datetime
+from Menu import get_menu_du_jour
 
 DB_PATH = "Gaston_db.sqlite"
+
+def recuperer_menu(self):
+    return get_menu_du_jour()
 
 def log_action(func):
     """Décorateur qui log l'exécution d'une méthode dans un fichier."""
