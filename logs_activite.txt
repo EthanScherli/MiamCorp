@@ -1,0 +1,1 @@
+[LOG] 2025-12-18 19:18:35 - Action: ajouterReservation - Erreur: Impossible de réserver dans le passé (2000-11-11)
