@@ -1,7 +1,7 @@
 import re
 
 class Utilisateur:
-    def __init__(self, nom, prenom, email, mdp, role, id_util=None):
+    def __init__(self, nom, prenom, email, mdp, role = "client", id_util=None):
         self.id_util = id_util  # optionnel, récupéré depuis la DB
         self.nom = nom
         self.prenom = prenom
