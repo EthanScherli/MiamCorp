@@ -64,45 +64,68 @@ class Main:
 
     @staticmethod
     def chargerUtilisateurs():
-        # On vérifie d'abord que la table existe (au cas où)
         try:
-            Main.curseur.execute("SELECT id_util, nom, prenom, email, mdp, role FROM utilisateurs")
+            Main.curseur.execute(
+                "SELECT id_util, nom, prenom, email, mdp, role FROM utilisateurs"
+            )
             lignes = Main.curseur.fetchall()
         except sqlite3.OperationalError:
-            return # La table n'existe pas encore, on ne fait rien
+            return
 
         Main.liste_utilisateurs.clear()
-        
+
         for id_util, nom, prenom, email, mdp, role in lignes:
             try:
-                # On essaie de créer l'utilisateur
+                #  CORRECTION ICI
+                if role is None:
+                    role = "client"
+
                 user = Utilisateur(nom, prenom, email, mdp, role, id_util=id_util)
                 Main.liste_utilisateurs.append(user)
+
             except ValueError:
-                # Si l'email est invalide (ex: "test"), on ignore cette ligne et on continue !
                 print(f"ATTENTION: Utilisateur ignoré (données invalides en BDD) : {email}")
                 continue
 
     @staticmethod
     def creerCompteUtilisateur():
-        nom = input("veuillez entrez votre nom >> ")
-        prenom = input("veuillez entrez votre prenom >> ")
-        email = input("veuillez entrez votre email >> ")
-        mdp = input("veuillez entrez un mot de passe >> ")
+        nom = input("veuillez entrez votre nom >> ").strip()
+        prenom = input("veuillez entrez votre prenom >> ").strip()
+        email = input("veuillez entrez votre email >> ").strip()
+        mdp = input("veuillez entrez un mot de passe >> ").strip()
+
+        if not nom or not prenom or not email or not mdp:
+            print("Erreur : Tous les champs doivent être remplis.")
+            return
+
+        #  rôle par défaut
         role = "client"
+
+        #  création de l'objet Utilisateur
+        utilisateur = Utilisateur(nom, prenom, email, mdp, role)
 
         try:
             Main.curseur.execute(
                 "INSERT INTO utilisateurs (nom, prenom, email, mdp, role) VALUES (?, ?, ?, ?, ?)",
-                (nom, prenom, email, mdp, role)
+                (
+                    utilisateur.nom,
+                    utilisateur.prenom,
+                    utilisateur.email,
+                    utilisateur.mdp,
+                    utilisateur.role
+                )
             )
+
             Main.connexion.commit()
             Main.chargerUtilisateurs()
-            print("Utilisateur créé avec succès.")
+
+            print("Utilisateur créé avec succès (rôle : client).")
+
         except sqlite3.IntegrityError:
             print("Erreur : Cet email est déjà utilisé.")
+
         except Exception as e:
-            print(f"Erreur : {e}")
+            print(f"Erreur inattendue : {e}")
 
     @staticmethod
     def connecterUtilisateur():
