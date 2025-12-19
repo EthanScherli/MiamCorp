@@ -142,6 +142,14 @@ class FenetreMenu(tk.Frame):
         tk.Label(self, text="Menu principal",
                  font=("Arial", 22, "bold"),
                  bg=COULEUR_FOND, fg=COULEUR_ACCENT).pack(pady=20)
+        util = self.app_gui.utilisateur
+        tk.Label(
+            self,
+            text=f"Bienvenue {util.prenom} {util.nom}",
+            font=("Arial",14),
+            bg=COULEUR_FOND,
+            fg="#5a3e2b"
+        ).pack(pady=(0,15))
 
         for texte, action in [
             ("Voir la Carte 🍽️", self.app_gui.voir_la_carte),
