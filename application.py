@@ -126,10 +126,11 @@ class Application:
             try:
                 connexion = sqlite3.connect(DB_PATH)
                 curseur = connexion.cursor()
-                if self.utilisateur.role == "client":
-                    curseur.execute("SELECT * FROM reservations WHERE id_util = ?", (self.utilisateur.id_util,))
+                if self.utilisateur.role == "admin":
+                    curseur.execute("SELECT * FROM reservations")
                 else:
-                     curseur.execute("SELECT * FROM reservations")
+                    curseur.execute("SELECT * FROM reservations WHERE id_util = ?", (self.utilisateur.id_util,))
+
                 lignes = curseur.fetchall()
                 if not lignes:
                     print("Vous n'avez aucune réservation.")
