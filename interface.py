@@ -69,7 +69,13 @@ class FenetreCreationCompte(tk.Frame):
         self.prenom = tk.Entry(self, width=30)
         self.email = tk.Entry(self, width=30)
         self.mdp = tk.Entry(self, width=30)
-        self.role = tk.Entry(self, width=30)
+        self.role = ttk.Combobox(
+            self,
+            values=["client"],
+            state="readonly",
+            width=28
+        )
+        self.role.set("client")
 
         for label, field in [("Nom", self.nom),
                              ("Prénom", self.prenom),
