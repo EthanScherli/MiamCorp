@@ -123,20 +123,24 @@ class Application:
             raise e
         
     def voirReservation(self):
-        try:
-            connexion = sqlite3.connect(DB_PATH)
-            curseur = connexion.cursor()
-            curseur.execute("SELECT * FROM reservations WHERE id_util = ?", (self.utilisateur.id_util,))
-            lignes = curseur.fetchall()
-            if not lignes:
-                print("Vous n'avez aucune réservation.")
-            else:
-                for ligne in lignes:
-                    resa = Reservation(*ligne)
-                    print(resa)
-            connexion.close()
-        except Exception as e:
-            print("Erreur lors de la lecture des réservations :", e)
+            try:
+                connexion = sqlite3.connect(DB_PATH)
+                curseur = connexion.cursor()
+                if self.utilisateur.role == "client":
+                    curseur.execute("SELECT * FROM reservations WHERE id_util = ?", (self.utilisateur.id_util,))
+                else:
+                     curseur.execute("SELECT * FROM reservations")
+                lignes = curseur.fetchall()
+                if not lignes:
+                    print("Vous n'avez aucune réservation.")
+                else:
+                    for ligne in lignes:
+                        resa = Reservation(*ligne)
+                        print(resa)
+                connexion.close()
+            except Exception as e:
+                print("Erreur lors de la lecture des réservations :", e)
+        
 
     @log_action
     def supprimerReservation(self):
