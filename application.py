@@ -71,12 +71,14 @@ class Application:
         heure = input("Entrez l'heure de la réservation (HH:MM) >> ")
         nbr_pers = input("Nombre de personnes >> ")
         pref = input("Préférences du client >> ")
-        self.ajouterReservation(id_table, date, heure, nbr_pers, pref)
+      
 
         try:
             self.ajouterReservation(id_table, date, heure, nbr_pers, pref)
         except DateInvalideError as e:
             print(f"--- ERREUR DATE : {e} ---")
+        except CapaciteTableDepasseeError as e:
+            print(f"--- ERREUR CAPACITÉ : {e} ---")
         except Exception as e:
             print(f"--- ERREUR : {e} ---")
 
