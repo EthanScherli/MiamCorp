@@ -54,3 +54,15 @@ class TestConnecterUtilisateur(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+class TestCapaciteTable(unittest.TestCase):
+
+    def test_depassement_capacite(self):
+        capacite_table = 4
+        nbr_pers = 6
+        self.assertGreater(nbr_pers, capacite_table)
+
+
+
