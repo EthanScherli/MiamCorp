@@ -529,11 +529,12 @@ class InterfaceGraphique:
                 app.ajouterReservation(id_table, date_val, heure_val, nbr, pref)
                 messagebox.showinfo("Succès", f"Réservation ajoutée pour la table {id_table}.")
                 win.destroy()
+
+             except CapaciteTableDepasseeError as e:
+                messagebox.showerror("Capacité dépassée", str(e))
+                 
             except Exception as e:
                 messagebox.showerror("Erreur", f"Impossible d'ajouter la réservation : {e}")
-
-            except CapaciteTableDepasseeError as e:
-                messagebox.showerror("Capacité dépassée", str(e))
 
 
         tk.Button(win, text="Ajouter la réservation", bg=COULEUR_BOUTON, command=ajouter).pack(pady=16)
