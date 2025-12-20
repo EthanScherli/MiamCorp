@@ -98,7 +98,7 @@ class Application:
     
             # 🔧 2. Vérification capacité de la table
             curseur.execute(
-                "SELECT capacite FROM tabless WHERE id_table = ?",
+                "SELECT capacité FROM tabless WHERE table_id = ?",
                 (id_table,)
             )
             result = curseur.fetchone()
