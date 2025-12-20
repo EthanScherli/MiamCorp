@@ -532,6 +532,10 @@ class InterfaceGraphique:
             except Exception as e:
                 messagebox.showerror("Erreur", f"Impossible d'ajouter la réservation : {e}")
 
+            except CapaciteTableDepasseeError as e:
+                messagebox.showerror("Capacité dépassée", str(e))
+
+
         tk.Button(win, text="Ajouter la réservation", bg=COULEUR_BOUTON, command=ajouter).pack(pady=16)
 
     def afficher_suppr_resa(self):
