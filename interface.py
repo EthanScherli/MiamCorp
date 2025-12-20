@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk, simpledialog
 from main import Main
-from application import Application
+from application import Application, CapaciteTableDepasseeError
 import sqlite3
 from Utilisateur import Utilisateur
 from Menu import get_menu_du_jour
