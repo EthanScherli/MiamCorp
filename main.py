@@ -48,10 +48,7 @@ class Main:
         )
         """)
         
-        # On sauvegarde les changements
         Main.connexion.commit()
-
-        # (Optionnel) On crée quelques tables de restaurant par défaut si la table est vide
         Main.curseur.execute("SELECT count(*) FROM tabless")
         if Main.curseur.fetchone()[0] == 0:
             print("Création des tables du restaurant par défaut...")
