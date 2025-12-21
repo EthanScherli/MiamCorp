@@ -530,7 +530,7 @@ class InterfaceGraphique:
                 messagebox.showinfo("Succès", f"Réservation ajoutée pour la table {id_table}.")
                 win.destroy()
 
-             except CapaciteTableDepasseeError as e:
+            except CapaciteTableDepasseeError as e:
                 messagebox.showerror("Capacité dépassée", str(e))
                  
             except Exception as e:

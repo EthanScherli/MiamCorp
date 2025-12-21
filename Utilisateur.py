@@ -10,6 +10,16 @@ class Utilisateur:
         self.role = role
 
     @property
+    def nom(self):
+        return self._nom
+
+    @nom.setter
+    def nom(self, valeur):
+        if not valeur:
+            raise ValueError("Le nom ne peut pas être vide")
+        self._nom = valeur
+
+    @property
     def email(self):
         return self._email
 
