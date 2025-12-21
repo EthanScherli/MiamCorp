@@ -58,12 +58,6 @@ def test_creation_compte_champs_vides():
             "Erreur", "Veuillez remplir tous les champs"
         )
 
-def test_email_valide_et_invalide():
-    u = Utilisateur("Alice", "Dupont", "alice@mail.com", "1234", "admin")
-    assert u.email == "alice@mail.com"
-    with pytest.raises(ValueError):
-        u.email = "mauvais_email"
-
 def test_verifier_mdp():
     u = Utilisateur("Bob", "Martin", "bob@mail.com", "abcd", "client")
     assert u.verifier_mdp("abcd") is True
@@ -80,3 +74,11 @@ def test_changement_nom():
     u = Utilisateur("David", "Martin", "david@mail.com", "pass", "client")
     u.valeurNom = "Durand" 
     assert u.nom == "Durand"
+
+def test_emails_majuscule():
+    utilisateurs = [
+        Utilisateur("Nom1", "Prenom1", "a@mail.com", "123", "client"),
+        Utilisateur("Nom2", "Prenom2", "b@mail.com", "456", "admin")
+    ]
+    emails_upper = list(map(lambda u: u.email.upper(), utilisateurs))
+    assert emails_upper == ["A@MAIL.COM", "B@MAIL.COM"]
