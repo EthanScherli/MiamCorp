@@ -5,7 +5,22 @@ from Reservations import Reservation, DateInvalideError
 from main import Main, Utilisateur
 
 class TestReservation(unittest.TestCase):
-
+# ---------------------------------------------------------
+# ENTRÉE
+# ---------------------------------------------------------
+# restaurant_id : 1               (int)
+# client_id     : 1               (int)
+# table_id      : 1               (int)
+# date          : "YYYY-MM-DD" +1 (str)
+# heure         : "12:00"         (str)
+# nb_personnes  : 2               (int)
+# commentaire   : "Aucune"        (str)
+# ---------------------------------------------------------
+# SORTIE
+# ---------------------------------------------------------
+# Retourne : Une nouvelle instance (objet) de la classe Reservation.
+# État     : L'objet est stocké dans la variable 'resa'.
+# Vérif    : resa.date est bien égale à la date fournie.
     def test_creation_reservation_future(self):
         demain = (date.today() + timedelta(days=1)).isoformat()
         try:
@@ -13,7 +28,23 @@ class TestReservation(unittest.TestCase):
             self.assertEqual(resa.date, demain)
         except DateInvalideError:
             self.fail(f"Une date future valide ({demain}) ne devrait pas lever d'exception.")
+# ---------------------------------------------------------
+# ENTRÉE
+# ---------------------------------------------------------
+# restaurant_id : 1               (int)
+# client_id     : 1               (int)
+# table_id      : 1               (int)
+# date          : "YYYY-MM-DD" -1 (str)
+# heure         : "12:00"         (str)
+# nb_personnes  : 2               (int)
+# commentaire   : "Aucune"        (str)
 
+# ---------------------------------------------------------
+# SORTIE
+# ---------------------------------------------------------
+# Retourne : /
+# Action   : raise une exception de type 'DateInvalideError'
+# Conséquence : Le programme ne fait pas de réservation
     def test_rejet_reservation_passee(self):
         hier = (date.today() - timedelta(days=1)).isoformat()
         with self.assertRaises(DateInvalideError):
@@ -63,6 +94,7 @@ class TestCapaciteTable(unittest.TestCase):
         capacite_table = 4
         nbr_pers = 6
         self.assertGreater(nbr_pers, capacite_table)
+
 
 
 
