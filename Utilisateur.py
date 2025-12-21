@@ -1,5 +1,9 @@
 import re
 
+class UtilisateurErreur(Exception):
+    """Exception levée lorsque les données d'un utilisateur sont invalides."""
+    pass
+
 class Utilisateur:
     def __init__(self, nom, prenom, email, mdp, role = "client", id_util=None):
         self.id_util = id_util  # optionnel, récupéré depuis la DB
@@ -16,7 +20,7 @@ class Utilisateur:
     @nom.setter
     def nom(self, valeur):
         if not valeur:
-            raise ValueError("Le nom ne peut pas être vide")
+            raise UtilisateurErreur("Le nom ne peut pas être vide")
         self._nom = valeur
 
     @property
@@ -28,7 +32,7 @@ class Utilisateur:
         new_email = new_email.strip()
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$'
         if not re.match(regex, new_email):
-            raise ValueError(f"Format d'email invalide : {new_email}")
+            raise UtilisateurErreur(f"Format d'email invalide : {new_email}")
         self._email = new_email
 
     @property
