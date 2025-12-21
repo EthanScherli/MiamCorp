@@ -95,6 +95,35 @@ class TestCapaciteTable(unittest.TestCase):
         nbr_pers = 6
         self.assertGreater(nbr_pers, capacite_table)
 
+if __name__ == "__main__":
+    unittest.main()
 
 
+class TestReservationTableInexistante(unittest.TestCase):
 
+    def setUp(self):
+        # Faux utilisateur
+        self.utilisateur = Utilisateur(
+            id_util=1,
+            nom="Test",
+            prenom="User",
+            email="test@test.com",
+            mdp="1234",
+            role="client"
+        )
+        self.app = Application(self.utilisateur)
+
+    def test_table_inexistante(self):
+        with self.assertRaises(Exception) as context:
+            self.app.ajouterReservation(
+                id_table=9999,  # ID inexistant
+                date="2030-01-01",
+                heure="20:00",
+                nbr_pers=2,
+                pref="Près de la fenêtre"
+            )
+
+        self.assertIn("Table inexistante", str(context.exception))
+
+if __name__ == "__main__":
+    unittest.main()
