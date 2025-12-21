@@ -139,6 +139,17 @@ class Application:
     
             connexion.close()
             print(f"Réservation ajoutée avec succès : ID {id_genere}")
+
+            curseur.execute(
+                "SELECT capacite FROM tabless WHERE id_table = ?",
+                (id_table,)
+            )
+            result = curseur.fetchone()
+            
+            if result is None:
+                connexion.close()
+                raise Exception("Table inexistante.")
+
     
         # Gestion des erreurs métier
         except DateInvalideError as e:
