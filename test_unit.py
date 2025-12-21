@@ -10,10 +10,27 @@ class UtilisateurTest:
         self._mdp = mdp
 
     def verifier_mdp(self, mdp):
+        """
+        PRE:
+            - mdp est une chaîne
+        POST:
+            - retourne True si mdp correspond à _mdp
+            - False sinon
+        """
         return self._mdp == mdp
 
 
 def test_connexion_reussie():
+    
+    """
+    PRE:
+        - FenetreConnexion initialisée avec root et app_gui mockés
+        - UtilisateurTest simulant un utilisateur existant
+    POST:
+        - app_gui.utilisateur est mis à jour
+        - app_gui.afficher_menu est appelé
+    """
+    
     root = MagicMock()
     app_gui = MagicMock()
 
@@ -38,6 +55,13 @@ def test_connexion_reussie():
 
 
 def test_creation_compte_champs_vides():
+    """
+  PRE:
+    - FenetreCreationCompte initialisée avec root et app_gui mockés
+    - Tous les champs sauf mdp et role sont vides
+  POST:
+    - messagebox.showerror est appelé avec le bon message
+    """
     root = MagicMock()
     app_gui = MagicMock()
 
@@ -59,11 +83,25 @@ def test_creation_compte_champs_vides():
         )
 
 def test_verifier_mdp():
+    """
+    PRE:
+        - Utilisateur avec mdp stocké
+        - mdp à tester
+    POST:
+        - retourne True si mdp correct
+        - False sinon
+    """
     u = Utilisateur("Bob", "Martin", "bob@mail.com", "abcd", "client")
     assert u.verifier_mdp("abcd") is True
     assert u.verifier_mdp("wrong") is False
 
 def test_str_utilisateur():
+    """
+    PRE:
+        - Utilisateur avec nom, prenom, email et role
+    POST:
+        - retourne une chaîne contenant nom, prenom, email et role
+    """
     u = Utilisateur("Carla", "Lopez", "carla@mail.com", "pass", "admin")
     result = str(u)
     assert "Carla Lopez" in result
@@ -71,11 +109,25 @@ def test_str_utilisateur():
     assert "admin" in result
 
 def test_changement_nom():
+    """
+    PRE:
+        - Utilisateur existant
+        - nouvelle valeur pour nom
+    POST:
+        - nom de l'utilisateur mis à jour
+    """
     u = Utilisateur("David", "Martin", "david@mail.com", "pass", "client")
     u.valeurNom = "Durand" 
     assert u.nom == "Durand"
 
 def test_emails_majuscule():
+    """
+    PRE:
+        - liste d'objets Utilisateur avec emails valides
+    POST:
+        - retourne une liste avec tous les emails en majuscules
+        - aucun effet de bord sur les objets originaux
+    """
     utilisateurs = [
         Utilisateur("Nom1", "Prenom1", "a@mail.com", "123", "client"),
         Utilisateur("Nom2", "Prenom2", "b@mail.com", "456", "admin")
